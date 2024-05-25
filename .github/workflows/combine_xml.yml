@@ -1,0 +1,25 @@
+name: Combine XML Files
+
+on:
+  schedule:
+    - cron: '35 0 * * *'  # Everyday at 12.35am MYT
+
+jobs:
+  combine_xml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Download and Combine XML Files
+        run: |
+          chmod +x combine_xml.sh
+          ./combine_xml.sh
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add Rancak.xml
+          git commit -m "Combine XML files"
+          git push
