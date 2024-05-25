@@ -20,11 +20,12 @@ jobs:
       - name: Combine XML Files
         run: cat unifi_epg.xml astro_epg.xml > Rancak.xml
 
-      - name: Commit and Push Changes
-        if: github.event_name != 'workflow_dispatch'  # Skip this step if manually triggered
+      - name: Commit Changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add Rancak.xml
           git commit -m "Combine XML files"
-          git push
+
+      - name: Push Changes
+        run: git push
