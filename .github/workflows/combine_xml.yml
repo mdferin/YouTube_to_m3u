@@ -3,6 +3,7 @@ name: Combine XML Files
 on:
   schedule:
     - cron: '35 0 * * *'  # Everyday at 12.35am MYT
+  workflow_dispatch:  # This allows manual triggering
 
 jobs:
   combine_xml:
@@ -11,12 +12,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Download and Combine XML Files
+      - name: Download XML Files
         run: |
-          chmod +x combine_xml.sh
-          ./combine_xml.sh
+          wget -O unifi_epg.xml https://raw.githubusercontent.com/azimabid00/epg/main/unifi_epg.xml
+          wget -O astro_epg.xml https://raw.githubusercontent.com/azimabid00/epg/main/astro_epg.xml
+
+      - name: Combine XML Files
+        run: cat unifi_epg.xml astro_epg.xml > Rancak.xml
 
       - name: Commit and Push Changes
+        if: github.event_name != 'workflow_dispatch'  # Skip this step if manually triggered
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
